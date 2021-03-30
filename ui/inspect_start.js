@@ -711,7 +711,9 @@ $.Radiko.login_status.premium=1 ;
 window.isStationInArea = function(){return true;}
 
 
+// basically  enter the out url directly
 if (window.location.hash == "#!/out"){
     $.colorbox.close();
-    history.repalceState(null, null, ' ')
+    history.replaceState(null, null, ' ')
 }
+
