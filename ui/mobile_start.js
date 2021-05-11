@@ -1,24 +1,20 @@
-document.addEventListener("DOMContentLoaded", function(event) {
-  var meta = document.createElement('meta');
-  meta.name = "viewport";
-  meta.content = "width="+screen.width;
-  document.head.appendChild(meta);
-  document.body.style.display = 'unset';
+document.addEventListener('DOMContentLoaded', function (event) {
+  let meta = document.createElement('meta')
+  meta.name = 'viewport'
+  meta.content = 'width=' + screen.width
+  document.head.appendChild(meta)
+  document.body.style.display = 'unset'
 
-
-  document.getElementById('pause').addEventListener('click',function(evnet){
-    if(document.getElementById('play').children[0].children[0].classList.contains('on')){
-      document.getElementById('pause').children[0].children[0].style.opacity='0.5';
+  document.getElementById('pause').addEventListener('click', function (evnet) {
+    if (document.getElementById('play').children[0].children[0].classList.contains('on')) {
+      document.getElementById('pause').children[0].children[0].style.opacity = '0.5'
     }
-
-  });
-  document.getElementById('play').addEventListener('click',function(evnet){
-    if(document.getElementById('pause').children[0].children[0].style.opacity == '0.5'){
-      setTimeout(function(){
-        document.getElementById('pause').children[0].children[0].style.opacity = '1';
-      },600);
-      
+  })
+  document.getElementById('play').addEventListener('click', function (evnet) {
+    if (document.getElementById('pause').children[0].children[0].style.opacity === '0.5') {
+      setTimeout(function () {
+        document.getElementById('pause').children[0].children[0].style.opacity = '1'
+      }, 600)
     }
-  });
-
-});
+  })
+})
