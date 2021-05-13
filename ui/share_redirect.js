@@ -1,3 +1,8 @@
+const log = (...args) => {
+  console.log('%crajiko', 'padding: 4px 6px; background: rgb(200,100,0); border-radius: 4px;', ...args)
+}
+
+log('share redirect')
 let checkOverseas = document.getElementsByClassName('messageToOverseas')
 if (checkOverseas.length !== 0) {
   window.addEventListener('message', function (evt) {

@@ -1,4 +1,7 @@
+console.log('mobile start')
 document.addEventListener('DOMContentLoaded', function (event) {
+  console.log('DOMContentLoaded mobile')
+
   let meta = document.createElement('meta')
   meta.name = 'viewport'
   meta.content = 'width=' + screen.width

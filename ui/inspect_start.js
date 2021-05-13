@@ -1,3 +1,64 @@
+const log = (...args) => {
+  console.log('%crajiko', 'padding: 4px 6px; background: rgb(200,100,0); border-radius: 4px;', ...args)
+}
+
+log('inspect start')
+
+const doViewport = () => {
+  document.head.innerHTML += `<meta name="viewport" content="width=device-width, initial-scale=1">`
+}
+
+const doJapanTime = () => {
+  document.body.innerHTML += `<div id="jpntime" style="position:fixed; color:#fff; font-weight: bold; bottom:120px; right:0; background-color:#105671; padding: 8px 12px; font-size:20px;"></div>`
+  let setJpnTime = () => {
+    const d = new Date();
+    document.getElementById('jpntime').innerText = d.toLocaleString('de-DE', { timeZone: 'Asia/Tokyo' }).slice(-8)
+  }
+  setJpnTime()
+  setInterval(() => {
+    setJpnTime()
+  }, 1000)
+}
+
+const doMobile = () => {
+
+
+  for (const sheet of document.styleSheets) {
+    for (const rule of sheet.cssRules) {
+      if (rule.type === CSSRule.STYLE_RULE) {
+        // Support for recursing into other rule types, like media queries, left as an exercise for the reader
+        const { fontSize } = rule.style;
+        const [all, number, unit] = fontSize.match(/^([\d.]+)(\D+)$/) || [];
+        if (unit === "px") {
+          // Other units left as an exercise to the reader
+          rule.style.fontSize = `${number / 16}rem`
+        }
+      }
+    }
+  }
+
+  function font_size_set(new_size){
+    document.documentElement.style=`font-size: ${new_size}px`;
+  }
+
+  font_size_set(25)
+}
+
+const doPlayerArea = () => {
+  const playerArea = document.getElementById('player-area')
+  playerArea.style.position = 'fixed'
+  playerArea.style.top = '0'
+  playerArea.style.left = '0'
+  playerArea.style.width = '100vw'
+  playerArea.style.height = '100vh'
+  playerArea.style.zIndex = '999'
+}
+
+doViewport()
+doMobile()
+doJapanTime()
+//doPlayerArea()
+
 const needChangeTZ = Intl.DateTimeFormat().resolvedOptions().timeZone.toLowerCase() !== 'asia/tokyo'
 if (needChangeTZ) {
   //for those who are from different timezones.
@@ -690,21 +751,26 @@ if (needChangeTZ) {
     }
   }
 
-  $.Radiko.Player.View.seekBarView.onDragSeek = function () {
-  } // remove
-  $('#seekbar').find('.knob').draggable('destroy')
-  $('#seekbar')
-      .find('.knob')
-      .draggable({
-        axis: 'x',
-        containment: 'parent',
-        start: $.Radiko.Player.View.seekBarView.onDragStart,
-        drag: onDragSeekKai.bind($.Radiko.Player.View.seekBarView),
-        stop: $.Radiko.Player.View.seekBarView.onDragSeekKnob,
-      })
-}
+  try {
+    $.Radiko.Player.View.seekBarView.onDragSeek = function () {
+    } // remove
+    $('#seekbar').find('.knob').draggable('destroy')
+    $('#seekbar')
+        .find('.knob')
+        .draggable({
+          axis: 'x',
+          containment: 'parent',
+          start: $.Radiko.Player.View.seekBarView.onDragStart,
+          drag: onDragSeekKai.bind($.Radiko.Player.View.seekBarView),
+          stop: $.Radiko.Player.View.seekBarView.onDragSeekKnob,
+        })
+  } catch(e) {
+    console.warn(e)
+    console.log('not available')
+  }
 
-//break timeshift 3hour limit
+}
+// break timeshift 3hour limit
 // from tsdetail -> scheduleId (for 1 day , check every 1s ) && storeWatchId (for 3 hours,check on update)
 // this watcher is the first.
 store.watch('update', function (key, val, oldVal) {
@@ -717,18 +783,28 @@ store.watch('update', function (key, val, oldVal) {
   }
 })
 
-//to bypass check at
+// to bypass check at
 // to enfore select stream_smh_multi url areafree = 0 link (bypass containStation check)
 // also bypass connectiontype check! see allocateConnection
 // to pass our generated token
 // this may run after d2-app report premium?
 $.Radiko.login_status.areafree = 1
 $.Radiko.login_status.premium = 1
+
 window.isStationInArea = function () {
   return true
 }
 
+const landingUrl = localStorage.getItem('landingUrl')
+log('landing url', landingUrl)
+
 if (window.location.hash === '#!/out') {
+  log('redirect #!/out. Goto: ', landingUrl)
   $.colorbox.close()
-  history.replaceState(null, null, ' ')
+  setTimeout(() => {
+    const hash = landingUrl.split('#')[1]
+    if (hash) {
+      window.location.hash = hash
+    }
+  }, 2000)
 }

@@ -353,6 +353,15 @@ vertical-align: -17px;
     margin-top: 5px
 }
 
+.program-ticker.slick-initialized.slick-slider {
+    margin-top: -10px;
+    width: 300px;
+}
+
+.player-area {
+    display: block;
+}
+
 .player-area__volume {
     display: none;
 }
