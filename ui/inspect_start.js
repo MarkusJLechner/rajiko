@@ -5,11 +5,12 @@ const log = (...args) => {
 log('inspect start')
 
 const doViewport = () => {
-  document.head.innerHTML += `<meta name="viewport" content="width=device-width, initial-scale=1">`
+  document.body.style.zoom = '2.5'
+  // document.head.innerHTML += `<meta name="viewport" content="width=device-width, initial-scale=1">`
 }
 
 const doJapanTime = () => {
-  document.body.innerHTML += `<div id="jpntime" style="position:fixed; color:#fff; font-weight: bold; bottom:120px; right:0; background-color:#105671; padding: 8px 12px; font-size:20px;"></div>`
+  document.body.innerHTML += `<div id="jpntime" style="position:fixed; color:#fff; font-weight: bold; bottom:120px; right:0; background-color:#105671; padding: 8px 12px; font-size:25px;"></div>`
   let setJpnTime = () => {
     const d = new Date();
     document.getElementById('jpntime').innerText = d.toLocaleString('de-DE', { timeZone: 'Asia/Tokyo' }).slice(-8)
@@ -18,30 +19,6 @@ const doJapanTime = () => {
   setInterval(() => {
     setJpnTime()
   }, 1000)
-}
-
-const doMobile = () => {
-
-
-  for (const sheet of document.styleSheets) {
-    for (const rule of sheet.cssRules) {
-      if (rule.type === CSSRule.STYLE_RULE) {
-        // Support for recursing into other rule types, like media queries, left as an exercise for the reader
-        const { fontSize } = rule.style;
-        const [all, number, unit] = fontSize.match(/^([\d.]+)(\D+)$/) || [];
-        if (unit === "px") {
-          // Other units left as an exercise to the reader
-          rule.style.fontSize = `${number / 16}rem`
-        }
-      }
-    }
-  }
-
-  function font_size_set(new_size){
-    document.documentElement.style=`font-size: ${new_size}px`;
-  }
-
-  font_size_set(25)
 }
 
 const doPlayerArea = () => {
@@ -55,7 +32,6 @@ const doPlayerArea = () => {
 }
 
 doViewport()
-doMobile()
 doJapanTime()
 //doPlayerArea()
 
@@ -800,11 +776,11 @@ log('landing url', landingUrl)
 
 if (window.location.hash === '#!/out') {
   log('redirect #!/out. Goto: ', landingUrl)
-  $.colorbox.close()
   setTimeout(() => {
     const hash = landingUrl.split('#')[1]
     if (hash) {
+      $.colorbox.close()
       window.location.hash = hash
     }
-  }, 2000)
+  }, 1000)
 }

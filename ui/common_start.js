@@ -20,7 +20,7 @@ function _waitForElement(selector, delay = 300, tries = 250) {
   if (element === null) {
     if (window[`__${selector}`] >= tries) {
       window[`__${selector}`] = 0;
-      return Promise.reject(null);
+      return Promise.resolve(null);
     }
 
     return _search().then(() => _waitForElement(selector));
@@ -38,13 +38,29 @@ log('common start')
 document.addEventListener('DOMContentLoaded', () => {
   log('common DOM Content loaded')
 
-  let mobileStart = document.createElement('script')
-  mobileStart.src = chrome.runtime.getURL('ui/mobile_start.js')
-  document.head.appendChild(mobileStart)
+  try {
+    let waitForJQuery = setInterval(function () {
+      if (typeof $ != 'undefined') {
+
+        // $.cookie('default_area_id', 'JP34')
+
+        // console.log('set default area id', 'JP34')
+
+        clearInterval(waitForJQuery);
+      }
+    }, 10);
+  } catch(e) {
+    console.log('cant set cookie')
+    console.log(e)
+  }
 
   let inspect_script = document.createElement('script')
   inspect_script.src = chrome.runtime.getURL('ui/inspect_start.js')
   document.head.appendChild(inspect_script)
+
+  let mobileStart = document.createElement('script')
+  mobileStart.src = chrome.runtime.getURL('ui/mobile_start.js')
+  document.head.appendChild(mobileStart)
 
   function loadStyle(src) {
     return new Promise(function (resolve, reject) {
@@ -61,30 +77,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadStyle(chrome.runtime.getURL('ui/mobile.css'))
 
-  const playButton = document.getElementById('play')?.getElementsByTagName('i')
-  let targetPlayButton = playButton ? playButton[0] : undefined
+  const playButton = document.getElementById('play')
+  const playTag = playButton ? playButton.getElementsByTagName('i') : null;
+  let targetPlayButton = playTag ? playTag[0] : undefined;
 
-  ;(async () => {
-    const el = await _waitForElement(`.colorbox.policy`)
-    if (el) {
-      el.style.display = 'none'
-    }
-    log(el);
-  })();
-  ;(async () => {
-    const el = await _waitForElement(`#colorbox`)
-    if (el) {
-      el.style.display = 'none'
-    }
-    log(el);
-  })();
-  ;(async () => {
-    const el = await _waitForElement(`#cboxOverlay`)
-    if (el) {
-      el.style.display = 'none'
-    }
-    log(el);
-  })();
+  try {
+    ;(async () => {
+      const el = await _waitForElement(`.colorbox.policy`)
+      if (el) {
+        el.style.display = 'none'
+      }
+      log('policy', el);
+    })();
+    ;(async () => {
+      const el = await _waitForElement(`#colorbox`)
+      if (el) {
+        el.style.display = 'none'
+      }
+      log('colorbox', el);
+    })();
+    ;(async () => {
+      const el = await _waitForElement(`#cboxOverlay`)
+      if (el) {
+        el.style.display = 'none'
+      }
+      log('cboxOverlay', el);
+    })();
+  } catch (e) {
+    console.log(e)
+  }
 
   if (targetPlayButton) {
     let observer = new MutationObserver(function (list) {

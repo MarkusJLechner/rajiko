@@ -1672,6 +1672,7 @@ chrome.storage.local.get({selected_areaid: 'JP13'}, function (data) {
                   // >= firefox android 59
                   if (modifier.length === 0) {
                     //and unregister?
+                    /*
                     modifier.push(
                         browser.contentScripts.register({
                           matches: ['*://*.radiko.jp/*'], //asterisk necessary?
@@ -1687,7 +1688,9 @@ chrome.storage.local.get({selected_areaid: 'JP13'}, function (data) {
                           ],
                           runAt: 'document_start',
                         }),
+
                     ) //must keep a reference ,otherwise it will not work.
+                     */
                   }
 
                   //only add once!!! and need removeListener?
